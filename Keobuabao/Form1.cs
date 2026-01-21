@@ -36,5 +36,14 @@ namespace Keobuabao
             button.Height = 100;
             button.Region = new Region(new RectangleF(0, 0, button.Width, button.Height));
         }
+
+        private void btnKeo_Click(object sender, EventArgs e)
+        {
+            
+            SendChoice("1");
+            pic_You.Image = Properties.Resources.Keo;
+          
+
+        }
     }
 }
