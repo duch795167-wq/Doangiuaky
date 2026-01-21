@@ -27,5 +27,14 @@ namespace Keobuabao
             MakeCircleButton(btnBua);
             MakeCircleButton(btnBao);
         }
+        private void MakeCircleButton(Button button)
+        {
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderSize = 0;
+            button.BackColor = Color.Transparent;
+            button.Width = 100;
+            button.Height = 100;
+            button.Region = new Region(new RectangleF(0, 0, button.Width, button.Height));
+        }
     }
 }
