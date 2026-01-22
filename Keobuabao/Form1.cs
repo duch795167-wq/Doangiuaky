@@ -51,5 +51,6 @@ namespace Keobuabao
             pic_You.Image = Properties.Resources.Bua;
             
         }
+
     }
 }
