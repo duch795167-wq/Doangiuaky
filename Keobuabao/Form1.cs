@@ -45,5 +45,11 @@ namespace Keobuabao
           
 
         }
+        private void btnBua_Click(object sender, EventArgs e)
+        {
+            SendChoice("2");
+            pic_You.Image = Properties.Resources.Bua;
+            
+        }
     }
 }
