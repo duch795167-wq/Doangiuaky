@@ -115,4 +115,49 @@ namespace Keobuabao_Server
             }
 
         }
+
+        static string ReceiveAgain(TcpClient client)
+        {
+            try
+            {
+                NetworkStream stream = client.GetStream();
+                byte[] buffer = new byte[1024];
+                int bytesRead = stream.Read(buffer, 0, buffer.Length);
+
+                if (bytesRead == 0)
+                    return null;
+
+                string choiceAgain = Encoding.UTF8.GetString(buffer, 0, bytesRead).Trim();
+                return (choiceAgain == "Y" || choiceAgain == "N") ? choiceAgain : null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        static void SendMessage(TcpClient client, string msg)
+        {
+            try
+            {
+                NetworkStream stream = client.GetStream();
+                byte[] data = Encoding.UTF8.GetBytes(msg);
+                stream.Write(data, 0, data.Length);
+            }
+            catch { }
+        }
+
+        static string CalculateResult(string c1, string c2)
+        {
+            if (c1 == c2) return "HÒA!";
+
+            if ((c1 == "1" && c2 == "3") ||    // Kéo thắng Bao
+                (c1 == "2" && c2 == "1") ||    // Búa thắng Kéo
+                (c1 == "3" && c2 == "2"))      // Bao thắng Búa
+                return "Bạn THẮNG! 🎉";
+
+            return "Bạn THUA! 😢";
+        }
+
+    }
 }
