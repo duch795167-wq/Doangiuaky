@@ -152,6 +152,42 @@ namespace Keobuabao
             button.Region = new Region(new RectangleF(0, 0, button.Width, button.Height));
         }
 
+
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            string ip = string.IsNullOrEmpty(txtIP.Text) ? "127.0.0.1" : txtIP.Text.Trim();
+
+            if (!IsLocalhost127_0_0_X(ip))
+            {
+                MessageBox.Show("Chỉ được kết nối đến địa chỉ 127.0.0.x (localhost)!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            try
+            {
+
+                client = new TcpClient(ip, 8888);
+                stream = client.GetStream();
+
+                txtStatus.Text = "Đã kết nối server!\n";
+
+                // Thread nhận tin nhắn từ server
+                receiveThread = new Thread(ReceiveMessages);
+                receiveThread.IsBackground = true;
+                receiveThread.Start();
+
+                btnConnect.Enabled = false;
+                txtIP.Enabled = false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Không kết nối được server!\n" + ex.Message);
+            }
+        }
+        private void btnPlayAgain_Click(object sender, EventArgs e)
+        {
+            SendChoice("Y");
+        }
+
         private void btnKeo_Click(object sender, EventArgs e)
         {
             
