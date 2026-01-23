@@ -97,24 +97,7 @@ namespace Keobuabao_Server
                 p2.Close();
             }
         }
-        static String ReceiveChoice(TcpClient client)
-            {
-            try
-            {
-                NetworkStream stream = client.GetStream();
-                byte[] buffer = new byte[1024];
-                int bytesRead = stream.Read(buffer, 0, buffer.Length);
-                if (bytesRead == 0) 
-                    return null; // Kết nối bị đóng
-                String choice = Encoding.UTF8.GetString(buffer, 0, bytesRead).Trim();
-                return Encoding.UTF8.GetString(buffer, 0, bytesRead).Trim();
-            }
-            catch
-            {
-                return null;
-            }
-
-        }
+        
 
         static string ReceiveAgain(TcpClient client)
         {
