@@ -187,6 +187,10 @@ namespace Keobuabao
         {
             SendChoice("Y");
         }
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            SendChoice("N");
+        }
 
         private void btnKeo_Click(object sender, EventArgs e)
         {
