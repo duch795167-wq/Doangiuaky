@@ -202,6 +202,12 @@ namespace Keobuabao
             pic_You.Image = Properties.Resources.Bua;
             
         }
-        //Duc-Testgit
+        private void btnBao_Click(object sender, EventArgs e)
+        {
+ 
+            SendChoice("3");
+            pic_You.Image = Properties.Resources.Bao;
+           
+        }
     }
 }
