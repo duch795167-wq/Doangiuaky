@@ -1,4 +1,6 @@
+﻿using System.Net;
 using System.Net.Sockets;
+using System.Text;
 
 namespace Keobuabao
 {
@@ -27,6 +29,119 @@ namespace Keobuabao
             MakeCircleButton(btnBua);
             MakeCircleButton(btnBao);
         }
+
+        private void ReceiveMessages()
+        {
+            try
+            {
+                byte[] buffer = new byte[1024];
+
+                while (true)
+                {
+                    int bytesRead = stream.Read(buffer, 0, buffer.Length);
+                    if (bytesRead == 0) break;
+
+                    string message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        if (message.StartsWith("Ket qua la:"))
+                        {
+                            string result = message.Split(':')[1].Trim();
+                            lbl_Result.Visible = true;
+                            btnPlayAgain.Visible = true;
+                            btnExit.Visible = true;
+                            lbl_Result.Text = result;
+                            txtStatus.AppendText("-" + message + Environment.NewLine);
+                        }
+                        else if (message.StartsWith("Doi thu chon:"))
+                        {
+                            string Enemy_choice = message.Split(':')[1].Trim();
+                            ShowEnemyChoice(Enemy_choice);
+                        }
+                        else
+                        {
+                            txtStatus.AppendText("-" + message + Environment.NewLine);
+                        }
+
+
+                        // Khi bắt đầu game → hiện nút chọn
+                        if (message.Contains("BẮT ĐẦU"))
+                        {
+                            txtStatus.Clear();
+                            txtStatus.AppendText("-" + message + Environment.NewLine);
+                            lbl_Result.Visible = false;
+                            pic_You.Visible = true;
+                            pic_Enemy.Visible = true;
+                            pic_Background.Visible = false;
+                            pic_Enemy.Image = null;
+                            pic_You.Image = null;
+                            btnKeo.Visible = true;
+                            btnBua.Visible = true;
+                            btnBao.Visible = true;
+
+                            btnPlayAgain.Visible = false;
+                            btnExit.Visible = false;
+
+                        }
+
+                    });
+
+                }
+            }
+            catch { }
+        }
+
+        private void SendChoice(string choice)
+        {
+            try
+            {
+                byte[] data = Encoding.UTF8.GetBytes(choice);
+                stream.Write(data, 0, data.Length);
+
+
+                this.Invoke((MethodInvoker)delegate
+                {
+                    btnKeo.Visible = false;
+                    btnBua.Visible = false;
+                    btnBao.Visible = false;
+                    if (choice == "N")
+                    {
+                        txtStatus.AppendText("Ban da thoat");
+                        btnKeo.Visible = false;
+                        btnBua.Visible = false;
+                        btnBao.Visible = false;
+                        btnPlayAgain.Visible = false;
+                        btnExit.Enabled = false;
+                        lbl_Result.Visible = false;
+                        pic_Enemy.Visible = false;
+                        pic_You.Visible = false;
+
+                    }
+                    else if (choice == "Y") txtStatus.AppendText("Dang doi doi thu");
+                    else txtStatus.AppendText("Đã gửi lựa chọn... Đang chờ kết quả" + Environment.NewLine);
+
+
+
+                });
+
+
+                // Ẩn nút sau khi chọn
+
+            }
+            catch { }
+        }
+        private bool IsLocalhost127_0_0_X(string ip)
+        {
+            if (!IPAddress.TryParse(ip, out IPAddress address)) return false;
+            byte[] bytes = address.GetAddressBytes();
+            return bytes[0] == 127 && bytes[1] == 0 && bytes[2] == 0;
+        }
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            stream?.Close();
+            client?.Close();
+        }
+
         private void MakeCircleButton(Button button)
         {
             button.FlatStyle = FlatStyle.Flat;
@@ -35,6 +150,42 @@ namespace Keobuabao
             button.Width = 100;
             button.Height = 100;
             button.Region = new Region(new RectangleF(0, 0, button.Width, button.Height));
+        }
+
+
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            string ip = string.IsNullOrEmpty(txtIP.Text) ? "127.0.0.1" : txtIP.Text.Trim();
+
+            if (!IsLocalhost127_0_0_X(ip))
+            {
+                MessageBox.Show("Chỉ được kết nối đến địa chỉ 127.0.0.x (localhost)!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            try
+            {
+
+                client = new TcpClient(ip, 8888);
+                stream = client.GetStream();
+
+                txtStatus.Text = "Đã kết nối server!\n";
+
+                // Thread nhận tin nhắn từ server
+                receiveThread = new Thread(ReceiveMessages);
+                receiveThread.IsBackground = true;
+                receiveThread.Start();
+
+                btnConnect.Enabled = false;
+                txtIP.Enabled = false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Không kết nối được server!\n" + ex.Message);
+            }
+        }
+        private void btnPlayAgain_Click(object sender, EventArgs e)
+        {
+            SendChoice("Y");
         }
 
         private void btnKeo_Click(object sender, EventArgs e)
