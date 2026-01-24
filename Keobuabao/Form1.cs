@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Drawing.Drawing2D;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
@@ -18,12 +19,12 @@ namespace Keobuabao
             btnBao.Visible = false;
             btnPlayAgain.Visible = false;
             btnExit.Visible = false;
-            lbl_Result.Visible = false;
-            lbl_VS.Visible = false;
-            pic_Enemy.Visible = false;
-            pic_You.Visible = false;
-            lbl_You.Visible = false;
-            lbl_Enemy.Visible = false;
+            lblResult.Visible = false;
+            lblVS.Visible = false;
+            picEnemy.Visible = false;
+            picYou.Visible = false;
+            lblYou.Visible = false;
+            lblEnemy.Visible = false;
 
             MakeCircleButton(btnKeo);
             MakeCircleButton(btnBua);
@@ -47,10 +48,10 @@ namespace Keobuabao
                         if (message.StartsWith("Ket qua la:"))
                         {
                             string result = message.Split(':')[1].Trim();
-                            lbl_Result.Visible = true;
+                            lblResult.Visible = true;
                             btnPlayAgain.Visible = true;
                             btnExit.Visible = true;
-                            lbl_Result.Text = result;
+                            lblResult.Text = result;
                             txtStatus.AppendText("-" + message + Environment.NewLine);
                         }
                         else if (message.StartsWith("Doi thu chon:"))
@@ -69,12 +70,12 @@ namespace Keobuabao
                         {
                             txtStatus.Clear();
                             txtStatus.AppendText("-" + message + Environment.NewLine);
-                            lbl_Result.Visible = false;
-                            pic_You.Visible = true;
-                            pic_Enemy.Visible = true;
+                            lblResult.Visible = false;
+                            picYou.Visible = true;
+                            picEnemy.Visible = true;
                             pic_Background.Visible = false;
-                            pic_Enemy.Image = null;
-                            pic_You.Image = null;
+                            picEnemy.Image = null;
+                            picYou.Image = null;
                             btnKeo.Visible = true;
                             btnBua.Visible = true;
                             btnBao.Visible = true;
@@ -90,7 +91,23 @@ namespace Keobuabao
             }
             catch { }
         }
+        void ShowEnemyChoice(string choice)
+        {
+            picEnemy.SizeMode = PictureBoxSizeMode.Zoom;
 
+            switch (choice)
+            {
+                case "1":
+                    picEnemy.Image = Properties.Resources.Keo;
+                    break;
+                case "2":
+                    picEnemy.Image = Properties.Resources.Bua;
+                    break;
+                case "3":
+                    picEnemy.Image = Properties.Resources.Bao;
+                    break;
+            }
+        }
         private void SendChoice(string choice)
         {
             try
@@ -112,9 +129,9 @@ namespace Keobuabao
                         btnBao.Visible = false;
                         btnPlayAgain.Visible = false;
                         btnExit.Enabled = false;
-                        lbl_Result.Visible = false;
-                        pic_Enemy.Visible = false;
-                        pic_You.Visible = false;
+                        lblResult.Visible = false;
+                        picEnemy.Visible = false;
+                        picYou.Visible = false;
 
                     }
                     else if (choice == "Y") txtStatus.AppendText("Dang doi doi thu");
@@ -142,14 +159,14 @@ namespace Keobuabao
             client?.Close();
         }
 
-        private void MakeCircleButton(Button button)
+        private void MakeCircleButton(Button btn)
         {
-            button.FlatStyle = FlatStyle.Flat;
-            button.FlatAppearance.BorderSize = 0;
-            button.BackColor = Color.Transparent;
-            button.Width = 100;
-            button.Height = 100;
-            button.Region = new Region(new RectangleF(0, 0, button.Width, button.Height));
+            GraphicsPath path = new GraphicsPath();
+            path.AddEllipse(0, 0, btn.Width, btn.Height);
+            btn.Region = new Region(path);
+
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderSize = 0;
         }
 
 
@@ -187,21 +204,33 @@ namespace Keobuabao
         {
             SendChoice("Y");
         }
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            SendChoice("N");
+        }
 
         private void btnKeo_Click(object sender, EventArgs e)
         {
-            
+
             SendChoice("1");
-            pic_You.Image = Properties.Resources.Keo;
-          
+            picYou.Image = Properties.Resources.Keo;
+
 
         }
         private void btnBua_Click(object sender, EventArgs e)
         {
             SendChoice("2");
-            pic_You.Image = Properties.Resources.Bua;
-            
+            picYou.Image = Properties.Resources.Bua;
+
+        }
+        private void btnBao_Click(object sender, EventArgs e)
+        {
+
+            SendChoice("3");
+            picYou.Image = Properties.Resources.Bao;
+
         }
 
+        
     }
 }
