@@ -30,7 +30,7 @@ namespace Keobuabao_Server
                 new Thread(() => HandleGame(player1, player2)).Start();
             }
         }
-        static void HandleGame(TcpClient p1, TcpClient p2)
+      static void HandleGame(TcpClient p1, TcpClient p2)
         {
             try
             {
