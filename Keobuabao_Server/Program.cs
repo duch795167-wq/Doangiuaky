@@ -98,6 +98,25 @@ namespace Keobuabao_Server
             }
         }
         ///2
+        static string ReceiveChoice(TcpClient client)
+        {
+            try
+            {
+                NetworkStream stream = client.GetStream();
+                byte[] buffer = new byte[1024];
+                int bytesRead = stream.Read(buffer, 0, buffer.Length);
+
+                if (bytesRead == 0)
+                    return null;
+
+                string choice = Encoding.UTF8.GetString(buffer, 0, bytesRead).Trim();
+                return (choice == "1" || choice == "2" || choice == "3") ? choice : null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
 
     }
 }
