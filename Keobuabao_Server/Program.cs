@@ -30,7 +30,7 @@ namespace Keobuabao_Server
                 new Thread(() => HandleGame(player1, player2)).Start();
             }
         }
-        static void HandleGame(TcpClient p1, TcpClient p2)
+      static void HandleGame(TcpClient p1, TcpClient p2)
         {
             try
             {
@@ -140,6 +140,26 @@ namespace Keobuabao_Server
                 return "Bạn THẮNG! 🎉";
 
             return "Bạn THUA! 😢";
+        }
+        ///2
+        static string ReceiveChoice(TcpClient client)
+        {
+            try
+            {
+                NetworkStream stream = client.GetStream();
+                byte[] buffer = new byte[1024];
+                int bytesRead = stream.Read(buffer, 0, buffer.Length);
+
+                if (bytesRead == 0)
+                    return null;
+
+                string choice = Encoding.UTF8.GetString(buffer, 0, bytesRead).Trim();
+                return (choice == "1" || choice == "2" || choice == "3") ? choice : null;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
     }
