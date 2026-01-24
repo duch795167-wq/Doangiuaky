@@ -86,7 +86,7 @@
             picYou.Location = new Point(27, 141);
             picYou.Name = "picYou";
             picYou.Size = new Size(246, 296);
-            picYou.SizeMode = PictureBoxSizeMode.StretchImage;
+            picYou.SizeMode = PictureBoxSizeMode.Zoom;
             picYou.TabIndex = 3;
             picYou.TabStop = false;
             // 
@@ -96,7 +96,7 @@
             picEnemy.Location = new Point(407, 141);
             picEnemy.Name = "picEnemy";
             picEnemy.Size = new Size(246, 296);
-            picEnemy.SizeMode = PictureBoxSizeMode.StretchImage;
+            picEnemy.SizeMode = PictureBoxSizeMode.Zoom;
             picEnemy.TabIndex = 4;
             picEnemy.TabStop = false;
             // 

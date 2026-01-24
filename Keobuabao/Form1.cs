@@ -71,6 +71,9 @@ namespace Keobuabao
                             txtStatus.Clear();
                             txtStatus.AppendText("-" + message + Environment.NewLine);
                             lblResult.Visible = false;
+                            lblVS.Visible = true;
+                            lblYou.Visible = true;
+                            lblEnemy.Visible = true;
                             picYou.Visible = true;
                             picEnemy.Visible = true;
                             pic_Background.Visible = false;
@@ -127,6 +130,9 @@ namespace Keobuabao
                         btnKeo.Visible = false;
                         btnBua.Visible = false;
                         btnBao.Visible = false;
+                        lblVS.Visible = false;
+                        lblYou.Visible = false;
+                        lblEnemy.Visible = false;
                         btnPlayAgain.Visible = false;
                         btnExit.Enabled = false;
                         lblResult.Visible = false;
@@ -231,6 +237,6 @@ namespace Keobuabao
 
         }
 
-        
+       
     }
 }
